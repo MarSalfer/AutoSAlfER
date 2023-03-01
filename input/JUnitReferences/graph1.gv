@@ -1,0 +1,8 @@
+digraph V2EvoProbabilisticNetworkforAssetWeb2.0. {
+node Web2.0(5);
+node Browser(2);
+node PhishingURL(0);
+
+Browser(2)->Web2.0(5);
+PhishingURL(0)->Browser(2);
+}

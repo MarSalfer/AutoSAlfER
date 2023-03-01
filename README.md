@@ -1,4 +1,5 @@
-# Security Analyzer for Exploitability Risks (SAlfER)
+# Automotive Security Analyzer for Exploitability Risks (AutoSAlfER)
 
-Source code and benchmarking data of the Security Analyzer for Exploitability Risks are to be published here for the 13th International Conference on Availability, Reliability and Security (ARES 2018). The conference will be held from August 27 to August 30, 2018 at the Universität Hamburg, Germany.
-https://www.ares-conference.eu/
+AutoSAlfER is for analysing the exploitability risks of an automotive on-board network.
+This code is from the proof-of-concept implementation from Martin Salfer's dissertation “Automotive Security Analyzer for Exploitability Risks: An Automated and Attack Graph-Based Evaluation of On-Board Networks”.
+The license of this software is still to be determined; The most likely choice will be the MIT license.

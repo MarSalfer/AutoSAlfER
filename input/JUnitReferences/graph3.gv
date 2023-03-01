@@ -1,0 +1,29 @@
+digraph V2EvoProbabilisticNetworkforAssetInAppPaymentReputation. {
+node InAppPaymentReputation(8);
+node PaymentService(7);
+node IntermediarySoftware1(6);
+node IntermediarySoftware3(3);
+node IntermediarySoftware2(4);
+node Trichterknoten(0);
+node Browser(2);
+node Trichterknoten(1);
+node Trichterknoten(2);
+node PhishingURL(0);
+node Trichterknoten(3);
+
+PaymentService(7)->InAppPaymentReputation(8);
+IntermediarySoftware1(6)->Trichterknoten(0);
+IntermediarySoftware3(3)->Trichterknoten(0);
+Trichterknoten(0)->PaymentService(7);
+Browser(2)->IntermediarySoftware1(6);
+IntermediarySoftware1(6)->Trichterknoten(1);
+Browser(2)->Trichterknoten(1);
+Trichterknoten(1)->IntermediarySoftware3(3);
+IntermediarySoftware1(6)->Trichterknoten(2);
+IntermediarySoftware3(3)->Trichterknoten(2);
+Trichterknoten(2)->IntermediarySoftware2(4);
+PhishingURL(0)->Browser(2);
+IntermediarySoftware1(6)->Trichterknoten(3);
+Browser(2)->Trichterknoten(3);
+Trichterknoten(3)->IntermediarySoftware3(3);
+}
