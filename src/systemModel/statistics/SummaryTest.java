@@ -27,19 +27,6 @@ public class SummaryTest {
 
 	@Test
 	@Ignore
-	public final void testPdx() {
-		SystemModel sysModel = new SystemModel();
-//		systemModel.importer.ZedisXlsx.parseZedisIntoSysModel(sysModel);
-		systemModel.importer.Pdx.parseIntoSysModel(sysModel);
-
-		// DTC+Jobs Summary.
-		System.out.println(Summary.giveJobsDTCsPbxSummaryPerEcu(sysModel));
-	}
-
-	
-	
-	@Test
-	@Ignore
 	public final void testZedis() {
 		SystemModel sysModel = new SystemModel();
 		systemModel.importer.ZedisXlsx.parseZedisIntoSysModel(sysModel);
