@@ -1,6 +1,6 @@
 package systemModel.statistics;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.FileNotFoundException;
 
@@ -33,10 +33,9 @@ public class SummaryTest {
 
 		// Jobs: Given Types and necessary authentication key.
 		System.out.println(Summary.giveJobsTypeAuthSummary(sysModel));
-		
 
 	}
-	
+
 	@Test
 	public final void testFibex() {
 		SystemModel mySystem = new SystemModel();
@@ -48,13 +47,12 @@ public class SummaryTest {
 			System.out.println("A file was not found");
 		} catch (JAXBException je) {
 			System.out.println("Error with JAXB");
-			System.out
-					.println("Possible reason: One of the files isn't a FIBEX file");
+			System.out.println("Possible reason: One of the files isn't a FIBEX file");
 		} catch (Exception e) {
 			System.out.println("Unknown Exception: ");
 			e.printStackTrace();
 		}
-		
+
 		assertNotNull(systemImporter);
 		assertNotNull(mySystem);
 		assertNotNull(systemImporter.getComMediaMap());
@@ -64,6 +62,5 @@ public class SummaryTest {
 
 		System.out.println(Summary.signalsTotalNumber(mySystem));
 	}
-	
-	
+
 }
