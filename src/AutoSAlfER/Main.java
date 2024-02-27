@@ -13,6 +13,7 @@ import analysis.multipath.salfer.PoincareSylvester;
 import analysis.report.Report;
 import attackGraph.AttackGraph;
 import attackGraph.AttackScenario;
+import attackGraph.visualization.GexfExporter;
 import attackerProfile.Access;
 import attackerProfile.AttackerProfile;
 import exploit.Exploit;
@@ -117,6 +118,9 @@ public class Main {
 		System.out.println("Main.doAnalysis():");
 		System.out.println(attackGraph);
 		System.out.println(report);
+		
+		/* Export Graph */
+		new GexfExporter().exportAttackGraphToGexfFile(attackGraph, "output/graph.gexf");
 	}
 
 	/**
