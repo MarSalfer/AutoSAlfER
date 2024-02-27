@@ -45,9 +45,9 @@ public class Main {
 	 */
 	public static final void main(String[] args) {
 		/* Start a real analysis. */
-		do35upAnalysisP2Test();
+		doAnalysis();
 
-		/* Start a test. */
+		/* Start tests. */
 		// testQueue();
 		// testHashSetForNullAdd();
 		// testDoubleNullArithmetics();
@@ -57,6 +57,93 @@ public class Main {
 		// booleanAdditionTest();
 		// testAffordabilityRoundingProblem();
 		// maxMemory();
+	}
+
+	private static final void doAnalysis() {
+		/* System Model */
+		/* Software Definition */
+		final String[] fibexFiles = { "input/fibex/Vehicle_A_FlexRay_V42_PWF_lokal.xml", "input/fibex/Vehicle_Body2-CAN_V16_PWF_fern.xml",
+				"input/fibex/Vehicle_Body-CAN_V35_PWF_fern.xml", "input/fibex/Vehicle_CAS-CAN_V6_PWF_fern.xml", "input/fibex/Vehicle_D_CAN_V28_PWF_fern.xml",
+				"input/fibex/Vehicle_FA-CAN_V33_PWF_fern.xml", "input/fibex/Vehicle_FASL-CAN_V6_PWF_fern.xml", "input/fibex/Vehicle_FASR-CAN_V6_PWF_fern.xml",
+				"input/fibex/Vehicle_IuK-CAN_V12_PWF_fern.xml", "input/fibex/Vehicle_LE-CAN_V9_PWF_fern.xml", "input/fibex/Vehicle_LP-CAN_V9_PWF_fern.xml",
+				"input/fibex/Vehicle_PS-CAN_V8_PWF_fern.xml", "input/fibex/Vehicle_USS-CAN_V8_PWF_fern.xml", "input/fibex/Vehicle_ZSG-CAN_V22_PWF_fern.xml" };
+		final String reportFileName = "reports/AttackRiskReport-Main.xml";
+		final SystemModel sysModel = loadSystemModelFromFibex(fibexFiles);
+		final String nameAtm = "ATM";
+		final String nameDme1 = "DME1";
+		final String nameBdc = "BDC2015";
+		final String nameNbt = "NBTevo";
+		final String nameDsc = "DSC_Modul";
+		final String nameObd = "ZGW_OBD";
+
+		/* Asset Definition */
+		final Asset assetVMax = new Asset("vMax", sysModel.getSoftwareWithName(nameDme1), new Resources(10_000D, 5_000d));
+		final Asset assetCarTheft = new Asset("CarTheft", sysModel.getSoftwareWithName(nameBdc), new Resources(50_000, 10_000d));
+		final Asset assetPaymentCredentials = new Asset("PaymentCredentials", sysModel.getSoftwareWithName(nameNbt), new Resources(500, 500d));
+		final Asset assetPaymentReputation = new Asset("PaymentReputation", sysModel.getSoftwareWithName(nameNbt), new Resources(100, 100d));
+		final Asset assetSafetyDSC = new Asset("PassangerSafety_DSC", sysModel.getSoftwareWithName(nameDsc), new Resources(1_000, 500d));
+		final Asset assetSafetyBDC = new Asset("PassangerSafety_BDC", sysModel.getSoftwareWithName(nameBdc), new Resources(1_000, 500d));
+		final Asset[] assets = { assetVMax, assetCarTheft, assetPaymentCredentials, assetPaymentReputation, assetSafetyDSC, assetSafetyBDC };
+
+		/* Attacker Profile Definition */
+		final AttackerProfile attacker = new AttackerProfile("Generic", 10, new Resources(20_000d, 15_000d));
+		attacker.addAccess(new Access("OBD access", sysModel.getSoftwareWithName(nameObd), 100, new Resources(300, 100d)));
+		attacker.addAccess(new Access("Internet", sysModel.getSoftwareWithName(nameAtm), 1_000, new Resources(50, 100d)));
+		attacker.addAccess(new Access("HU Malware", sysModel.getSoftwareWithName(nameNbt), 100, new Resources(50, 100d)));
+		attacker.desires(assets);
+
+		/* Exploit database. */
+		final HashSet<Exploit> exploits = new HashSet<Exploit>();
+		for (Software sw : sysModel.getSoftwareSet()) {
+			if (sw.getName().equals(nameBdc)) {
+				exploits.add(new PotentialExploit(sw.getName(), sw, new Resources(20_000d, 5_000d)));
+				continue;
+			}
+			exploits.add(new PotentialExploit(sw.getName(), sw, new Resources(5_000d, 5_000d)));
+		}
+		for (Asset a : assets) {
+			exploits.add(new PotentialExploit(a.getName(), a, new Resources(1_000, 500d)));
+		}
+
+		/* Attack Scenario */
+		final AttackScenario scenario = new AttackScenario("generic-attack", sysModel, attacker, exploits);
+
+		/* Run */
+		final Crawler c = new Crawler(scenario);
+		final AttackGraph attackGraph = c.crawlAndGetAttackForest();
+
+		/* Report */
+		final String report = Report.analyzeAndGenerateReport(attackGraph, reportFileName);
+		System.out.println("Main.doAnalysis():");
+		System.out.println(attackGraph);
+		System.out.println(report);
+	}
+
+	/**
+	 * Load a system model by importing FIBEX files.
+	 * 
+	 * @param sysModel
+	 */
+	private static final SystemModel loadSystemModelFromFibex(String[] fibexFiles) {
+		SystemModel sysModel = new SystemModel();
+		Fibex31toModel systemImporter = new Fibex31toModel();
+		try {
+			systemImporter.importSystemModelFromFibex(fibexFiles, sysModel, true, true);
+		} catch (FileNotFoundException fe) {
+			System.out.println(fe);
+		} catch (JAXBException je) {
+			System.out.println(je);
+		} catch (Exception e) {
+			System.out.println(e);
+			e.printStackTrace();
+		}
+
+		assert (systemImporter != null);
+		assert (sysModel != null);
+		assert (sysModel.nodes != null);
+		assert (systemImporter.getComMediaMap() != null);
+		assert (systemImporter.getExclusiveComMediaMap() != null);
+		return sysModel;
 	}
 
 	private static void maxMemory() {
@@ -150,41 +237,6 @@ public class Main {
 		expectedValue += pathCost * pathNumber * Math.pow((1 - pathHitLikelihood), pathNumber);
 
 		return expectedValue;
-	}
-
-	private static final void do35upAnalysisP2Test() {
-		/* System Model */
-		/* Software Definition */
-
-		// removed this method for publication
-		// TODO: write replacement as a template
-	}
-
-	/**
-	 * Load a system model by importing FIBEX files.
-	 * 
-	 * @param sysModel
-	 */
-	private static final SystemModel loadSystemModelFromFibex(String[] fibexFiles) {
-		SystemModel sysModel = new SystemModel();
-		Fibex31toModel systemImporter = new Fibex31toModel();
-		try {
-			systemImporter.importSystemModelFromFibex(fibexFiles, sysModel, true, true);
-		} catch (FileNotFoundException fe) {
-			System.out.println(fe);
-		} catch (JAXBException je) {
-			System.out.println(je);
-		} catch (Exception e) {
-			System.out.println(e);
-			e.printStackTrace();
-		}
-
-		assert (systemImporter != null);
-		assert (sysModel != null);
-		assert (sysModel.nodes != null);
-		assert (systemImporter.getComMediaMap() != null);
-		assert (systemImporter.getExclusiveComMediaMap() != null);
-		return sysModel;
 	}
 
 	// private static void testDoubleNullArithmetics() {
